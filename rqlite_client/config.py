@@ -1,4 +1,0 @@
-import os
-
-RQLITE_HOST = '192.168.0.122'
-RQLITE_PORT = 31426
