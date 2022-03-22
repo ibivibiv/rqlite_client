@@ -1,11 +1,10 @@
 import pyrqlite.dbapi2 as dbapi2
-import config
 
 
-def get_connection():
+def get_connection(host, port):
     connection = dbapi2.connect(
-        host=config.RQLITE_HOST,
-        port=config.RQLITE_PORT
+        host=host,
+        port=port
     )
 
     return connection
@@ -157,10 +156,7 @@ def update_cluster(id, cpu_count, mem_count, max_cpu, max_mem, contig_cpu, conti
 
 
 def get_cluster(id):
-    connection = dbapi2.connect(
-        host='192.168.0.122',
-        port=31426,
-    )
+    connection = get_connection()
 
     try:
         with connection.cursor() as cursor:
@@ -176,11 +172,11 @@ def get_cluster(id):
 
 def get_image(name) :
     try:
+        
         sql = "select * from images where name = '{}'".format(name)
-        connection = dbapi2.connect(
-            host='192.168.0.122',
-            port=31426,
-        )
+        
+        connection = get_connection()
+        
         with connection.cursor() as cursor:
 
             cursor.execute(sql)
