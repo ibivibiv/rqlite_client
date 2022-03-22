@@ -1,6 +1,7 @@
 import pyrqlite.dbapi2 as dbapi2
 
 
+
 def get_connection(host, port):
     connection = dbapi2.connect(
         host=host,
@@ -10,10 +11,10 @@ def get_connection(host, port):
     return connection
 
 
-def get_strategy():
+def get_strategy(host, port):
     try:
         sql = "select current_strategy from aggregate"
-        connection = get_connection()
+        connection = get_connection(host, port)
         with connection.cursor() as cursor:
 
             cursor.execute(sql)
@@ -29,8 +30,8 @@ def get_strategy():
         connection.close()
 
 
-def insert_host(name, ip, max_cpu, max_mem, capacity):
-    connection = get_connection()
+def insert_host(host, port, name, ip, max_cpu, max_mem, capacity):
+    connection = get_connection(host, port)
 
     insert = "INSERT INTO hosts(host_identifier, ip, max_cpu, max_mem, current_cpu, current_mem, disk_pool_capacity) VALUES(?, ?, ?, ?, ?, ?, ?)"
 
@@ -44,8 +45,8 @@ def insert_host(name, ip, max_cpu, max_mem, capacity):
         connection.close()
 
 
-def update_host_resources(id, cpu_count, mem_count, capacity):
-    connection = get_connection()
+def update_host_resources(host, port, id, cpu_count, mem_count, capacity):
+    connection = get_connection(host, port)
 
     update = "UPDATE hosts SET current_cpu = {}, current_mem = {}, disk_pool_capacity = {} WHERE id = {}".format(
         cpu_count, mem_count, capacity, id)
@@ -58,8 +59,8 @@ def update_host_resources(id, cpu_count, mem_count, capacity):
         connection.close()
 
 
-def get_hosts():
-    connection = get_connection()
+def get_hosts(host, port):
+    connection = get_connection(host, port)
 
     try:
         with connection.cursor() as cursor:
@@ -78,8 +79,8 @@ def get_hosts():
         connection.close()
 
 
-def get_host_resources():
-    connection = get_connection()
+def get_host_resources(host, port):
+    connection = get_connection(host, port)
     try:
         with connection.cursor() as cursor:
             sql = "SELECT max(current_cpu) as max_cpu, max(current_mem) as max_mem, sum(max_cpu) as max_total_cpu, sum(max_mem) as max_total_mem, sum(current_cpu) as total_cpu, sum(current_mem) as total_mem, max(disk_pool_capacity) as disk_pool_capacity FROM hosts"
@@ -93,8 +94,8 @@ def get_host_resources():
         connection.close()
 
 
-def get_host(id):
-    connection = get_connection()
+def get_host(host, port, id):
+    connection = get_connection(host, port)
 
     try:
         with connection.cursor() as cursor:
@@ -109,8 +110,8 @@ def get_host(id):
         connection.close()
 
 
-def get_host_by_uuid(uuid):
-    connection = get_connection()
+def get_host_by_uuid(host, port, uuid):
+    connection = get_connection(host, port)
 
     try:
         with connection.cursor() as cursor:
@@ -125,8 +126,8 @@ def get_host_by_uuid(uuid):
         connection.close()
 
 
-def insert_cluster(cpu_count, mem_count, max_cpu, max_mem, contig_cpu, contig_mem, disk_pool_capacity, strategy):
-    connection = get_connection()
+def insert_cluster(host, port, cpu_count, mem_count, max_cpu, max_mem, contig_cpu, contig_mem, disk_pool_capacity, strategy):
+    connection = get_connection(host, port)
 
     insert = "INSERT INTO cluster(cpu_count, mem_count, max_cpu, max_mem, contig_cpu, contig_mem, disk_pool_capacity, strategy) VALUES(?, ?, ?, ?, ?, ?, ?, ?)"
 
@@ -140,8 +141,8 @@ def insert_cluster(cpu_count, mem_count, max_cpu, max_mem, contig_cpu, contig_me
         connection.close()
 
 
-def update_cluster(id, cpu_count, mem_count, max_cpu, max_mem, contig_cpu, contig_mem, disk_pool_capacity):
-    connection = get_connection()
+def update_cluster(host, port, id, cpu_count, mem_count, max_cpu, max_mem, contig_cpu, contig_mem, disk_pool_capacity):
+    connection = get_connection(host, port)
 
     insert = "UPDATE cluster SET cpu_count=?, mem_count= ?, max_cpu= ?, max_mem= ?, contig_cpu= ?, contig_mem= ?, disk_pool_capacity= ? where id= ?"
 
@@ -155,8 +156,8 @@ def update_cluster(id, cpu_count, mem_count, max_cpu, max_mem, contig_cpu, conti
         connection.close()
 
 
-def get_cluster(id):
-    connection = get_connection()
+def get_cluster(host, port, id):
+    connection = get_connection(host, port)
 
     try:
         with connection.cursor() as cursor:
@@ -170,13 +171,10 @@ def get_cluster(id):
     finally:
         connection.close()
 
-def get_image(name) :
+def get_image(host, port, name) :
     try:
-        
         sql = "select * from images where name = '{}'".format(name)
-        
-        connection = get_connection()
-        
+        connection = get_connection(host, port)
         with connection.cursor() as cursor:
 
             cursor.execute(sql)
@@ -193,7 +191,7 @@ def get_image(name) :
         connection.close()
 
 
-def get_agg_clusters(strategy):
+def get_agg_clusters(host, port, strategy):
     if strategy == 'pack':
         sql = "select * from aggregate_cluster order by max_contig_mem asc"
     else:
@@ -201,7 +199,7 @@ def get_agg_clusters(strategy):
 
     cluster_list = []
     try:
-        connection = get_connection()
+        connection = get_connection(host, port)
         with connection.cursor() as cursor:
 
             cursor.execute(sql)
@@ -223,14 +221,14 @@ def get_agg_clusters(strategy):
         connection.close()
 
 
-def create_agg_cluster(cluster):
+def create_agg_cluster(host, port, cluster):
     sql = "INSERT INTO aggregate_cluster (name, scheduling_url, scheduling_topic, max_cpu, max_mem, max_disk, avail_cpu, avail_mem, avail_disk, max_contig_cpu, max_contig_mem, cluster_strategy, closed, reconcile) VALUES ('{}', '{}', '{}', {}, {}, {}, {}, {}, {}, {}, {}, '{}', {}, {});".format(
         cluster['name'], cluster['scheduling_url'], cluster['scheduling_topic'], cluster['max_cpu'], cluster['max_mem'],
         cluster['max_disk'], cluster['avail_cpu'], cluster['avail_mem'], cluster['avail_disk'],
         cluster['max_contig_cpu'], cluster['max_contig_mem'], cluster['cluster_strategy'],
         cluster['closed'], cluster['reconcile'])
     try:
-        connection = get_connection()
+        connection = get_connection(host, port)
         with connection.cursor() as cursor:
             cursor.execute(sql)
 
@@ -238,11 +236,11 @@ def create_agg_cluster(cluster):
         connection.close()
 
 
-def get_agg_cluster(name):
+def get_agg_cluster(host, port, name):
     sql = "select * from aggregate_cluster where name = '{}'".format(name)
 
     try:
-        connection = get_connection()
+        connection = get_connection(host, port)
         with connection.cursor() as cursor:
             cursor.execute(sql)
             result = cursor.fetchone()
@@ -270,12 +268,12 @@ def get_agg_cluster(name):
         connection.close()
 
 
-def get_agg_cluster_resources(cluster_name):
+def get_agg_cluster_resources(host, port, cluster_name):
     select = 'select sum(cpu) as cpu, sum(mem) as mem, max(cpu) as max_cpu, max(mem) as max_mem from aggregate_hosts where cluster_name = "{}";'.format(
         cluster_name)
     try:
 
-        connection = get_connection()
+        connection = get_connection(host, port)
         with connection.cursor() as cursor:
 
             cursor.execute(select)
@@ -291,7 +289,7 @@ def get_agg_cluster_resources(cluster_name):
         connection.close()
 
 
-def open_agg_cluster(name):
+def open_agg_cluster(host, port, name):
     update = 'UPDATE aggregate_hosts SET closed = 0 where name = "{}";'.format(name)
 
     try:
@@ -303,11 +301,11 @@ def open_agg_cluster(name):
         connection.close()
 
 
-def close_agg_cluster(name):
+def close_agg_cluster(host, port, name):
     update = 'UPDATE aggregate_hosts SET closed = 1 where name = "{}";'.format(name)
 
     try:
-        connection = get_connection()
+        connection = get_connection(host, port)
         with connection.cursor() as cursor:
             cursor.execute(update)
 
@@ -315,12 +313,12 @@ def close_agg_cluster(name):
         connection.close()
 
 
-def update_agg_cluster_resources(name, cpu, mem, disk, max_cpu, max_mem):
+def update_agg_cluster_resources(host, port, name, cpu, mem, disk, max_cpu, max_mem):
     update = 'UPDATE aggregate_hosts SET max_contig_mem avail_cpu = {}, avail_mem = {}, avail_disk = {}, max_contig_cpu = {}, max_contig_mem = {} WHERE name = "{}"'.format(
         cpu, mem, disk, max_cpu, max_mem, name)
 
     try:
-        connection = get_connection()
+        connection = get_connection(host, port)
         with connection.cursor() as cursor:
             cursor.execute(update)
 
@@ -328,7 +326,7 @@ def update_agg_cluster_resources(name, cpu, mem, disk, max_cpu, max_mem):
         connection.close()
 
 
-def get_agg_hosts(cluster_name, strategy):
+def get_agg_hosts(host, port, cluster_name, strategy):
     if strategy == 'pack':
         sql = 'select * from aggregate_hosts where cluster_name = "{}" order by mem asc'.format(cluster_name)
     else:
@@ -336,7 +334,7 @@ def get_agg_hosts(cluster_name, strategy):
 
     host_list = []
     try:
-        connection = get_connection()
+        connection = get_connection(host, port)
         with connection.cursor() as cursor:
 
             cursor.execute(sql)
@@ -353,11 +351,11 @@ def get_agg_hosts(cluster_name, strategy):
         connection.close()
 
 
-def update_agg_host_resources(uuid, cpu, mem):
+def update_agg_host_resources(host, port, uuid, cpu, mem):
     update = 'UPDATE aggregate_hosts SET cpu = {}, mem = {} WHERE uuid = "{}"'.format(cpu, mem, uuid)
 
     try:
-        connection = get_connection()
+        connection = get_connection(host, port)
         with connection.cursor() as cursor:
             cursor.execute(update)
 
