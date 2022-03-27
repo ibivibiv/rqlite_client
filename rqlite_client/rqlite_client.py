@@ -329,7 +329,7 @@ def update_agg_cluster_resources(host, port, name, cpu, mem, disk, max_cpu, max_
 
 
 def insert_agg_host(host, port, uuid, cpu, mem, cluster_name):
-    sql = "INSERT INTO aggregate_hosts (uuid, cpu, mem, cluster_name) VALUES ('{}', {}, {}, {});".format(uuid, cpu, mem,
+    sql = "REPLACE INTO aggregate_hosts (uuid, cpu, mem, cluster_name) VALUES ('{}', {}, {}, '{}');".format(uuid, cpu, mem,
                                                                                                          cluster_name)
     try:
         connection = get_connection(host, port)
