@@ -161,7 +161,7 @@ def get_cluster(host, port, id):
 
     try:
         with connection.cursor() as cursor:
-            sql = "SELECT * FROM cluster WHERE id = {}".format(id)
+            sql = "SELECT id, cpu_count, mem_count, max_cpu, max_mem, contig_cpu, contig_mem, disk_pool_capacity, strategy FROM cluster WHERE id = {}".format(id)
             cursor.execute(sql)
             result = cursor.fetchone()
             if result is None:
