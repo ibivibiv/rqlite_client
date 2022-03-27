@@ -195,9 +195,9 @@ def get_image(host, port, name):
 
 def get_agg_clusters(host, port, strategy):
     if strategy == 'pack':
-        sql = "select * from aggregate_cluster order by max_contig_mem asc"
-    else:
         sql = "select * from aggregate_cluster order by max_contig_mem desc"
+    else:
+        sql = "select * from aggregate_cluster order by max_contig_mem asc"
 
     cluster_list = []
     try:
@@ -316,7 +316,7 @@ def close_agg_cluster(host, port, name):
 
 
 def update_agg_cluster_resources(host, port, name, cpu, mem):
-    update = 'UPDATE aggregate_hosts SET cpu = {}, mem = {} WHERE name = "{}"'.format(
+    update = 'UPDATE aggregate_hosts SET cpu = {}, mem = {} WHERE uuid = "{}"'.format(
         cpu, mem, name)
 
     try:
@@ -342,9 +342,9 @@ def insert_agg_host(host, port, uuid, cpu, mem, cluster_name):
 
 def get_agg_hosts(host, port, cluster_name, strategy):
     if strategy == 'pack':
-        sql = 'select * from aggregate_hosts where cluster_name = "{}" order by mem asc'.format(cluster_name)
-    else:
         sql = 'select * from aggregate_hosts where cluster_name = "{}" order by mem desc'.format(cluster_name)
+    else:
+        sql = 'select * from aggregate_hosts where cluster_name = "{}" order by mem asc'.format(cluster_name)
 
     host_list = []
     try:
