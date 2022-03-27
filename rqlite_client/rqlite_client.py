@@ -1,7 +1,6 @@
 import pyrqlite.dbapi2 as dbapi2
 
 
-
 def get_connection(host, port):
     connection = dbapi2.connect(
         host=host,
@@ -126,7 +125,8 @@ def get_host_by_uuid(host, port, uuid):
         connection.close()
 
 
-def insert_cluster(host, port, cpu_count, mem_count, max_cpu, max_mem, contig_cpu, contig_mem, disk_pool_capacity, strategy):
+def insert_cluster(host, port, cpu_count, mem_count, max_cpu, max_mem, contig_cpu, contig_mem, disk_pool_capacity,
+                   strategy):
     connection = get_connection(host, port)
 
     insert = "INSERT INTO cluster(cpu_count, mem_count, max_cpu, max_mem, contig_cpu, contig_mem, disk_pool_capacity, strategy) VALUES(?, ?, ?, ?, ?, ?, ?, ?)"
@@ -161,7 +161,8 @@ def get_cluster(host, port, id):
 
     try:
         with connection.cursor() as cursor:
-            sql = "SELECT id, cpu_count, mem_count, max_cpu, max_mem, contig_cpu, contig_mem, disk_pool_capacity, strategy FROM cluster WHERE id = {}".format(id)
+            sql = "SELECT id, cpu_count, mem_count, max_cpu, max_mem, contig_cpu, contig_mem, disk_pool_capacity, strategy FROM cluster WHERE id = {}".format(
+                id)
             cursor.execute(sql)
             result = cursor.fetchone()
             if result is None:
@@ -171,7 +172,8 @@ def get_cluster(host, port, id):
     finally:
         connection.close()
 
-def get_image(host, port, name) :
+
+def get_image(host, port, name):
     try:
         sql = "select * from images where name = '{}'".format(name)
         connection = get_connection(host, port)
@@ -321,6 +323,18 @@ def update_agg_cluster_resources(host, port, name, cpu, mem, disk, max_cpu, max_
         connection = get_connection(host, port)
         with connection.cursor() as cursor:
             cursor.execute(update)
+
+    finally:
+        connection.close()
+
+
+def insert_agg_host(host, port, uuid, cpu, mem, cluster_name):
+    sql = "INSERT INTO aggregate_hosts (uuid, cpu, mem, cluster_name) VALUES ('{}', {}, {}, {});".format(uuid, cpu, mem,
+                                                                                                         cluster_name)
+    try:
+        connection = get_connection(host, port)
+        with connection.cursor() as cursor:
+            cursor.execute(sql)
 
     finally:
         connection.close()
