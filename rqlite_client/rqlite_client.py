@@ -364,6 +364,17 @@ def get_agg_hosts(host, port, cluster_name, strategy):
     finally:
         connection.close()
 
+def clear_agg_hosts(host, port):
+    delete = 'DELETE FROM aggregate_hosts;'
+
+    try:
+        connection = get_connection(host, port)
+        with connection.cursor() as cursor:
+            cursor.execute(delete)
+
+    finally:
+        connection.close()
+
 
 def update_agg_host_resources(host, port, uuid, cpu, mem):
     update = 'UPDATE aggregate_hosts SET cpu = {}, mem = {} WHERE uuid = "{}"'.format(cpu, mem, uuid)
