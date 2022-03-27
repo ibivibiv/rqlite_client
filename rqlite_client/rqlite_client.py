@@ -83,7 +83,7 @@ def get_host_resources(host, port):
     connection = get_connection(host, port)
     try:
         with connection.cursor() as cursor:
-            sql = "SELECT max(current_cpu) as max_cpu, max(current_mem) as max_mem, sum(max_cpu) as max_total_cpu, sum(max_mem) as max_total_mem, sum(current_cpu) as total_cpu, sum(current_mem) as total_mem, max(disk_pool_capacity) as disk_pool_capacity FROM hosts"
+            sql = "SELECT max(max_cpu - current_cpu) as max_cpu, max(max_mem - current_mem) as max_mem, sum(max_cpu) as max_total_cpu, sum(max_mem) as max_total_mem, sum(current_cpu) as total_cpu, sum(current_mem) as total_mem, max(disk_pool_capacity) as disk_pool_capacity FROM hosts;"
             cursor.execute(sql)
             result = cursor.fetchone()
             if result is None:
