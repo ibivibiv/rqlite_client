@@ -315,9 +315,9 @@ def close_agg_cluster(host, port, name):
         connection.close()
 
 
-def update_agg_cluster_resources(host, port, name, cpu, mem, disk, max_cpu, max_mem):
-    update = 'UPDATE aggregate_hosts SET avail_cpu = {}, avail_mem = {}, avail_disk = {}, max_contig_cpu = {}, max_contig_mem = {} WHERE name = "{}"'.format(
-        cpu, mem, disk, max_cpu, max_mem, name)
+def update_agg_cluster_resources(host, port, name, cpu, mem):
+    update = 'UPDATE aggregate_hosts SET cpu = {}, mem = {} WHERE name = "{}"'.format(
+        cpu, mem, name)
 
     try:
         connection = get_connection(host, port)
