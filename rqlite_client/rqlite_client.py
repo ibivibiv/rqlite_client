@@ -327,6 +327,18 @@ def update_agg_cluster_resources(host, port, name, cpu, mem):
     finally:
         connection.close()
 
+def update_agg_cluster(host, port, name, max_cpu, max_mem, max_disk, avail_cpu, avail_mem, avail_disk, max_contig_cpu, max_contig_mem, reconcile):
+    update = 'UPDATE aggregate_cluster SET max_cpu = {}, max_mem = {}, max_disk = {}, avail_cpu = {}, avail_mem = {}, avail_disk {}, max_contig_cpu = {}, max_contig_mem = {}, reconcile = {} WHERE name = "{}"'.format(
+        max_cpu, max_mem, max_disk, avail_cpu, avail_mem, avail_disk, max_contig_cpu, max_contig_mem, reconcile, name)
+
+    try:
+        connection = get_connection(host, port)
+        with connection.cursor() as cursor:
+            cursor.execute(update)
+
+    finally:
+        connection.close()
+
 
 def insert_agg_host(host, port, uuid, cpu, mem, cluster_name):
     sql = "REPLACE INTO aggregate_hosts (uuid, cpu, mem, cluster_name) VALUES ('{}', {}, {}, '{}');".format(uuid, cpu, mem,
