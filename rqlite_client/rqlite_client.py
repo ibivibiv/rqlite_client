@@ -316,7 +316,7 @@ def close_agg_cluster(host, port, name):
 
 
 def update_agg_cluster_resources(host, port, name, cpu, mem, disk, max_cpu, max_mem):
-    update = 'UPDATE aggregate_hosts SET max_contig_mem avail_cpu = {}, avail_mem = {}, avail_disk = {}, max_contig_cpu = {}, max_contig_mem = {} WHERE name = "{}"'.format(
+    update = 'UPDATE aggregate_hosts SET avail_cpu = {}, avail_mem = {}, avail_disk = {}, max_contig_cpu = {}, max_contig_mem = {} WHERE name = "{}"'.format(
         cpu, mem, disk, max_cpu, max_mem, name)
 
     try:
