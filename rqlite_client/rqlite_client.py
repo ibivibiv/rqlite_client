@@ -383,9 +383,9 @@ def get_agg_host(host, port, uuid):
     with connection.cursor() as cursor:
         cursor.execute(sql)
         result = cursor.fetchone()
-        host = result[0]
 
-        return host
+
+        return result
 
 def clear_agg_hosts(host, port):
     delete = 'DELETE FROM aggregate_hosts;'
