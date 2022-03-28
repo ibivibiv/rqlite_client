@@ -114,6 +114,22 @@ def get_host_by_uuid(host, port, uuid):
 
     try:
         with connection.cursor() as cursor:
+            sql = "SELECT * FROM hosts WHERE host_identifier = '{}'".format(id)
+            cursor.execute(sql)
+            result = cursor.fetchone()
+            if result is None:
+                return None
+            return result
+
+    finally:
+        connection.close()
+
+
+def get_host_by_uuid(host, port, uuid):
+    connection = get_connection(host, port)
+
+    try:
+        with connection.cursor() as cursor:
             sql = "SELECT * FROM hosts WHERE  host_identifier = '{}'".format(uuid)
             cursor.execute(sql)
             result = cursor.fetchone()
@@ -151,6 +167,17 @@ def update_cluster(host, port, id, cpu_count, mem_count, max_cpu, max_mem, conti
     try:
         with connection.cursor() as cursor:
             cursor.execute(insert, data)
+
+    finally:
+        connection.close()
+
+
+def set_cluster_reconcile(host, port, cluster):
+    sql = "update aggregate_cluster set reconcile=1 where name = '{}';".replace(cluster)
+    try:
+        connection = get_connection(host, port)
+        with connection.cursor() as cursor:
+            cursor.execute(sql)
 
     finally:
         connection.close()
@@ -327,7 +354,9 @@ def update_agg_cluster_resources(host, port, name, cpu, mem):
     finally:
         connection.close()
 
-def update_agg_cluster(host, port, name, max_cpu, max_mem, max_disk, avail_cpu, avail_mem, avail_disk, max_contig_cpu, max_contig_mem, reconcile):
+
+def update_agg_cluster(host, port, name, max_cpu, max_mem, max_disk, avail_cpu, avail_mem, avail_disk, max_contig_cpu,
+                       max_contig_mem, reconcile):
     update = 'UPDATE aggregate_cluster SET max_cpu = {}, max_mem = {}, max_disk = {}, avail_cpu = {}, avail_mem = {}, avail_disk = {}, max_contig_cpu = {}, max_contig_mem = {}, reconcile = {} WHERE name = "{}"'.format(
         max_cpu, max_mem, max_disk, avail_cpu, avail_mem, avail_disk, max_contig_cpu, max_contig_mem, reconcile, name)
 
@@ -341,8 +370,9 @@ def update_agg_cluster(host, port, name, max_cpu, max_mem, max_disk, avail_cpu, 
 
 
 def insert_agg_host(host, port, uuid, cpu, mem, cluster_name):
-    sql = "REPLACE INTO aggregate_hosts (uuid, cpu, mem, cluster_name) VALUES ('{}', {}, {}, '{}');".format(uuid, cpu, mem,
-                                                                                                         cluster_name)
+    sql = "REPLACE INTO aggregate_hosts (uuid, cpu, mem, cluster_name) VALUES ('{}', {}, {}, '{}');".format(uuid, cpu,
+                                                                                                            mem,
+                                                                                                            cluster_name)
     try:
         connection = get_connection(host, port)
         with connection.cursor() as cursor:
@@ -376,16 +406,16 @@ def get_agg_hosts(host, port, cluster_name, strategy):
     finally:
         connection.close()
 
-def get_agg_host(host, port, uuid):
 
+def get_agg_host(host, port, uuid):
     sql = 'select * from aggregate_hosts where uuid = "{}"'.format(uuid)
     connection = get_connection(host, port)
     with connection.cursor() as cursor:
         cursor.execute(sql)
         result = cursor.fetchone()
 
-
         return result
+
 
 def clear_agg_hosts(host, port):
     delete = 'DELETE FROM aggregate_hosts;'
