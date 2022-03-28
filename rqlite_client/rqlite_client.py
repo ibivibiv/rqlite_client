@@ -376,6 +376,17 @@ def get_agg_hosts(host, port, cluster_name, strategy):
     finally:
         connection.close()
 
+def get_agg_host(host, port, cluster_name, uuid):
+
+    sql = 'select * from aggregate_hosts where uuid = "{}"'.format(uuid)
+    connection = get_connection(host, port)
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        result = cursor.fetchone()
+        host = result[0]
+
+        return host
+
 def clear_agg_hosts(host, port):
     delete = 'DELETE FROM aggregate_hosts;'
 
