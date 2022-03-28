@@ -328,7 +328,7 @@ def update_agg_cluster_resources(host, port, name, cpu, mem):
         connection.close()
 
 def update_agg_cluster(host, port, name, max_cpu, max_mem, max_disk, avail_cpu, avail_mem, avail_disk, max_contig_cpu, max_contig_mem, reconcile):
-    update = 'UPDATE aggregate_cluster SET max_cpu = {}, max_mem = {}, max_disk = {}, avail_cpu = {}, avail_mem = {}, avail_disk {}, max_contig_cpu = {}, max_contig_mem = {}, reconcile = {} WHERE name = "{}"'.format(
+    update = 'UPDATE aggregate_cluster SET max_cpu = {}, max_mem = {}, max_disk = {}, avail_cpu = {}, avail_mem = {}, avail_disk = {}, max_contig_cpu = {}, max_contig_mem = {}, reconcile = {} WHERE name = "{}"'.format(
         max_cpu, max_mem, max_disk, avail_cpu, avail_mem, avail_disk, max_contig_cpu, max_contig_mem, reconcile, name)
 
     try:
