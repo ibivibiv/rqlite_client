@@ -376,7 +376,7 @@ def get_agg_hosts(host, port, cluster_name, strategy):
     finally:
         connection.close()
 
-def get_agg_host(host, port, cluster_name, uuid):
+def get_agg_host(host, port, uuid):
 
     sql = 'select * from aggregate_hosts where uuid = "{}"'.format(uuid)
     connection = get_connection(host, port)
