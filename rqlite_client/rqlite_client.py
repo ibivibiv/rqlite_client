@@ -173,7 +173,7 @@ def update_cluster(host, port, id, cpu_count, mem_count, max_cpu, max_mem, conti
 
 
 def set_cluster_reconcile(host, port, cluster):
-    sql = "update aggregate_cluster set reconcile=1 where name = '{}';".replace(cluster)
+    sql = "update aggregate_cluster set reconcile=1 where name = '{}';".format(cluster)
     try:
         connection = get_connection(host, port)
         with connection.cursor() as cursor:
