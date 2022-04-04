@@ -74,7 +74,7 @@ def get_cluster_resources(host, port, strategy):
 def get_agg_cluster(host, port, cluster_name):
     select = "select * from aggregate_cluster where name = '{}'".format(cluster_name)
 
-    return execute_query_many(host, port, select)
+    return execute_query_one(host, port, select)
 
 def set_cluster_reconcile(host, port, cluster) :
     sql = "update aggregate_cluster set reconcile=1 where name = '{}';".format(cluster)
