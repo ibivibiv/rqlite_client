@@ -134,12 +134,12 @@ def create_mem_resource(host, port, host_id, cluster_name):
 
 
 def delete_cpu(host, port, id):
-    delete = "Delete from cpu where id = {});".format(id)
+    delete = "Delete from cpu where id = {};".format(id)
     return execute_sql(host, port, delete)
 
 
 def delete_mem(host, port, id):
-    delete = "Delete from mem where id = {});".format(id)
+    delete = "Delete from mem where id = {};".format(id)
     return execute_sql(host, port, delete)
 
 
