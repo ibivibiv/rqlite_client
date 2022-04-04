@@ -62,9 +62,9 @@ def get_strategy(host, port, cluster_name):
 
 def get_cluster_resources(host, port, strategy):
     if strategy == "pack":
-        select = "select * from cluster_resources order by max_contig_mem desc"
-    elif strategy == "spread":
         select = "select * from cluster_resources order by max_contig_mem asc"
+    elif strategy == "spread":
+        select = "select * from cluster_resources order by max_contig_mem desc"
     else:
         return
 
@@ -89,9 +89,9 @@ def set_cluster_reconcile_off(host, port, cluster):
 
 def get_host_resources(host, port, cluster_name, strategy):
     if strategy == "pack":
-        select = "select * from host_resources where cluster_name = '{}' order by memcount desc".format(cluster_name)
-    elif strategy == "spread":
         select = "select * from host_resources where cluster_name = '{}' order by memcount asc".format(cluster_name)
+    elif strategy == "spread":
+        select = "select * from host_resources where cluster_name = '{}' order by memcount desc".format(cluster_name)
     else:
         return
 
