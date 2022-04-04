@@ -121,6 +121,10 @@ def create_cpu_resource(host, port, host_id, cluster_name):
     insert = "INSERT INTO cpu (host_id, host_count, cluster_name) VALUES ({}, 1, '{}');".format(host_id, cluster_name)
     return execute_sql(host, port, insert)
 
+def create_mem_resource(host, port, host_id, cluster_name):
+    insert = "INSERT INTO mem (host_id, host_count, cluster_name) VALUES ({}, 1, '{}');".format(host_id, cluster_name)
+    return execute_sql(host, port, insert)
+
 
 def insert_host(host, port, host_identifier, ip, cpu, mem, disk):
     insert = "INSERT INTO hosts(host_identifier, ip, cpu, mem, disk) VALUES('{}', '{}', {}, {}, {})".format(
