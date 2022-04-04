@@ -76,6 +76,10 @@ def get_agg_cluster(host, port, cluster_name):
 
     return execute_query_many(host, port, select)
 
+def set_cluster_reconcile(host, port, cluster) :
+    sql = "update aggregate_cluster set reconcile=1 where name = '{}';".format(cluster)
+    return execute_query_one(host, port, sql)
+
 
 def get_host_resources(host, port, cluster_name, strategy):
     if strategy == "pack":
