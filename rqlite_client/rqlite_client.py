@@ -76,13 +76,16 @@ def get_agg_cluster(host, port, cluster_name):
 
     return execute_query_one(host, port, select)
 
-def set_cluster_reconcile(host, port, cluster) :
+
+def set_cluster_reconcile(host, port, cluster):
     sql = "update aggregate_cluster set reconcile=1 where name = '{}';".format(cluster)
     return execute_query_one(host, port, sql)
 
-def set_cluster_reconcile_off(host, port, cluster) :
+
+def set_cluster_reconcile_off(host, port, cluster):
     sql = "update aggregate_cluster set reconcile=0 where name = '{}';".format(cluster)
     return execute_query_one(host, port, sql)
+
 
 def get_host_resources(host, port, cluster_name, strategy):
     if strategy == "pack":
@@ -124,9 +127,20 @@ def create_cpu_resource(host, port, host_id, cluster_name):
     insert = "INSERT INTO cpu (host_id, host_count, cluster_name) VALUES ({}, 1, '{}');".format(host_id, cluster_name)
     return execute_sql(host, port, insert)
 
+
 def create_mem_resource(host, port, host_id, cluster_name):
     insert = "INSERT INTO mem (host_id, host_count, cluster_name) VALUES ({}, 1, '{}');".format(host_id, cluster_name)
     return execute_sql(host, port, insert)
+
+
+def delete_cpu(host, port, id):
+    delete = "Delete from cpu where id = {});".format(id)
+    return execute_sql(host, port, delete)
+
+
+def delete_mem(host, port, id):
+    delete = "Delete from mem where id = {});".format(id)
+    return execute_sql(host, port, delete)
 
 
 def insert_host(host, port, host_identifier, ip, cpu, mem, disk):
