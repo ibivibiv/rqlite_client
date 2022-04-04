@@ -119,13 +119,13 @@ def create_cpu_resource(host, port, host_id, cluster_name):
 
 
 def insert_host(host, port, host_identifier, ip, cpu, mem, disk):
-    insert = "INSERT INTO hosts(host_identifier, ip, cpu, mem, disk_pool) VALUES('{}', '{}', {}, {}, {})".format(
+    insert = "INSERT INTO hosts(host_identifier, ip, cpu, mem, disk) VALUES('{}', '{}', {}, {}, {})".format(
         host_identifier, ip, cpu, mem, disk)
     execute_sql(host, port, insert)
 
 
 def update_host(host, port, id, cpu_count, mem_count, capacity):
-    update = "UPDATE hosts SET current_cpu = {}, current_mem = {}, disk_pool_capacity = {} WHERE id = {}".format(
+    update = "UPDATE hosts SET cpu = {}, mem = {}, disk = {} WHERE id = {}".format(
         cpu_count, mem_count, capacity, id)
     execute_sql(host, port, update)
 
