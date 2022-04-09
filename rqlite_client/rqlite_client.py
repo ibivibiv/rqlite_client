@@ -48,6 +48,11 @@ def execute_query_one(host, port, sql):
         connection.close()
 
 
+def get_image(host, port, os_image) :
+    select = "select * from images where name = '{}'".format(os_image)
+    return execute_query_one(host, port, select)
+
+
 def create_agg_cluster(host, port, name, scheduling_url, scheduling_topic, cluster_strategy, storage_pool, closed,
                        reconcile):
     insert = "INSERT INTO aggregate_cluster (name, scheduling_url, scheduling_topic, cluster_strategy, storage_pool, closed, reconcile) VALUES ('{}', '{}', '{}', '{}', '{}', {}, {});".format(
@@ -62,9 +67,9 @@ def get_strategy(host, port, cluster_name):
 
 def get_cluster_resources(host, port, strategy):
     if strategy == "pack":
-        select = "select * from cluster_resources order by max_contig_mem asc"
-    elif strategy == "spread":
         select = "select * from cluster_resources order by max_contig_mem desc"
+    elif strategy == "spread":
+        select = "select * from cluster_resources order by max_contig_mem asc"
     else:
         return
 
@@ -89,9 +94,9 @@ def set_cluster_reconcile_off(host, port, cluster):
 
 def get_host_resources(host, port, cluster_name, strategy):
     if strategy == "pack":
-        select = "select * from host_resources where cluster_name = '{}' order by memcount asc".format(cluster_name)
-    elif strategy == "spread":
         select = "select * from host_resources where cluster_name = '{}' order by memcount desc".format(cluster_name)
+    elif strategy == "spread":
+        select = "select * from host_resources where cluster_name = '{}' order by memcount asc".format(cluster_name)
     else:
         return
 
